@@ -1,24 +1,8 @@
 <#import "/spring.ftl" as spring />
 
-<html>
-<link href="../css/custom.css" rel="stylesheet" id="bootstrap-css">
-<link href="../css/bootstrap.css" rel="stylesheet" id="bootstrap-css">
-<link href="../css/bootstrap-grid.css" rel="stylesheet" id="bootstrap-css">
-<link href="../css/bootstrap-reboot.css" rel="stylesheet" id="bootstrap-css">
-<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css">
+<#import "layout.ftl" as layout>
 
-<script src="https://code.jquery.com/jquery-3.4.1.slim.js" integrity="sha256-BTlTdQO9/fascB1drekrDVkaKd9PkwBymMlHOiG+qLI="
-        crossorigin="anonymous"></script>
-<script src="../js/bootstrap.js"></script>
-<script src="../js/bootstrap.bundle.js"></script>
-
-<body>
-
-<main role="main" class="container">
-
-    <#if currentUser??>
-        You are logged in as ${currentUser.username}
-    </#if>
+<@layout.myLayout>
 
     <#if alarmSaved??>
         <div class="alert alert-success" role="alert">
@@ -95,24 +79,16 @@
         </div>
     </div>
 
+    <script>
+        $('#addAlarmModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var symbol = button.data('symbol'); // Extract info from data-* attributes
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this);
+            modal.find('.modal-title').text('Add alarm for ' + symbol);
+            modal.find('#stockSymbol').val(symbol);
+        })
+    </script>
 
-    <form id="logoutForm" method="POST" action="<@spring.url "/logout"/>">
-        <#--    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>-->
-        <button type="submit" value="Log Out">Log Out</button>
-    </form>
-</main>
-</body>
-
-<script>
-    $('#addAlarmModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget); // Button that triggered the modal
-        var symbol = button.data('symbol'); // Extract info from data-* attributes
-        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-        var modal = $(this);
-        modal.find('.modal-title').text('Add alarm for ' + symbol);
-        modal.find('#stockSymbol').val(symbol);
-    })
-</script>
-
-</html>
+</@layout.myLayout>

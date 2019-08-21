@@ -1,5 +1,7 @@
 package com.stocks.stockalarms.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,5 +12,8 @@ import com.stocks.stockalarms.domain.Alarm;
  */
 @Repository
 public interface AlarmRepository extends JpaRepository<Alarm, Long> {
+
+    List<Alarm> findAllByMonitoredStockPersonUsername(String username);
+
 
 }

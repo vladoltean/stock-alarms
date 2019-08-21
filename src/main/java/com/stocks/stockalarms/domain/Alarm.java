@@ -30,4 +30,6 @@ public class Alarm {
     private String rule;
 
     private Double alarmPrice;
+
+    private boolean active;
 }

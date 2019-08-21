@@ -1,5 +1,8 @@
 package com.stocks.stockalarms.service;
 
+import java.util.List;
+
+import com.stocks.stockalarms.dto.AlarmDto;
 import com.stocks.stockalarms.dto.AlarmForm;
 
 /**
@@ -8,5 +11,7 @@ import com.stocks.stockalarms.dto.AlarmForm;
 public interface AlarmService {
 
     void save(AlarmForm alarmForm);
+
+    List<AlarmDto> findAllForUser(String username);
 
 }

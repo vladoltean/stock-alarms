@@ -1,5 +1,10 @@
 package com.stocks.stockalarms.service;
 
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -7,11 +12,14 @@ import com.stocks.stockalarms.domain.Alarm;
 import com.stocks.stockalarms.domain.MonitoredStock;
 import com.stocks.stockalarms.domain.Person;
 import com.stocks.stockalarms.domain.Stock;
+import com.stocks.stockalarms.dto.AlarmDto;
 import com.stocks.stockalarms.dto.AlarmForm;
+import com.stocks.stockalarms.dto.StockDto;
 import com.stocks.stockalarms.repository.AlarmRepository;
 import com.stocks.stockalarms.repository.MonitoredStockRepository;
 import com.stocks.stockalarms.repository.PersonRepository;
 import com.stocks.stockalarms.repository.StockRepository;
+import com.stocks.stockalarms.util.Mapper;
 import com.stocks.stockalarms.util.UserUtil;
 
 import lombok.AllArgsConstructor;
@@ -54,6 +62,16 @@ public class AlarmServiceImpl implements AlarmService {
         alarm.setRefferencePrice(monitoredStock.getStock().getPrice());
 
         alarmRepository.save(alarm);
+    }
+
+    @Override
+    @Transactional
+    public List<AlarmDto> findAllForUser(String username) {
+        List<Alarm> alarms = alarmRepository.findAllByMonitoredStockPersonUsername(username);
+
+        return alarms.stream()
+                .map(Mapper.toAlarmDto)
+                .collect(Collectors.toList());
     }
 
     private Double calculateTargetPrice(Double initialPrice, String rule) {
