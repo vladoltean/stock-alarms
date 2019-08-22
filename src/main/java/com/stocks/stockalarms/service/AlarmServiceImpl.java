@@ -3,6 +3,7 @@ package com.stocks.stockalarms.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,8 +69,8 @@ public class AlarmServiceImpl implements AlarmService {
 
     @Override
     @Transactional
-    public List<AlarmDto> findAllForUser(String username) {
-        List<Alarm> alarms = alarmRepository.findAllByMonitoredStockPersonUsername(username);
+    public List<AlarmDto> findAllForUser(String username, Sort sort) {
+        List<Alarm> alarms = alarmRepository.findAllByMonitoredStockPersonUsername(username, sort);
 
         return alarms.stream()
                 .map(Mapper.toAlarmDto)

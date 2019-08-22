@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.stocks.stockalarms.dto.AlarmForm;
@@ -31,9 +33,24 @@ public class AlarmController {
     private AlarmService alarmService;
 
     @GetMapping
-    public String alarms(Model model) {
-        model.addAttribute("alarms", alarmService.findAllForUser(UserUtil.getCurrentUsername()));
+    public String alarms(Model model, @RequestParam String sortBy) {
+        model.addAttribute("alarms", alarmService.findAllForUser(UserUtil.getCurrentUsername(), processSort(sortBy)));
         return "alarms";
+    }
+
+    private Sort processSort(@RequestParam String sortBy) {
+        Sort.Direction direction;
+        if(sortBy.startsWith("-")){
+            direction = Sort.Direction.DESC;
+            sortBy = sortBy.substring(1);
+        } else if (sortBy.startsWith("+") ){
+            direction = Sort.Direction.ASC;
+            sortBy = sortBy.substring(1);
+        } else {
+            direction = Sort.Direction.ASC;
+        }
+
+        return new Sort(direction, sortBy);
     }
 
     @PostMapping
