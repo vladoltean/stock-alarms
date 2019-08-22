@@ -79,6 +79,7 @@
         </div>
     </div>
 
+<#--    TODO: it is not working anymore --> fix it -->
     <script>
         $('#addAlarmModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget); // Button that triggered the modal

@@ -8,6 +8,8 @@ import lombok.Data;
 @Data
 public class AlarmDto {
 
+    private Long id;
+
     private double referencePrice;
 
     private String rule;

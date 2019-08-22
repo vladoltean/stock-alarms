@@ -1,10 +1,8 @@
 package com.stocks.stockalarms.service;
 
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +12,6 @@ import com.stocks.stockalarms.domain.Person;
 import com.stocks.stockalarms.domain.Stock;
 import com.stocks.stockalarms.dto.AlarmDto;
 import com.stocks.stockalarms.dto.AlarmForm;
-import com.stocks.stockalarms.dto.StockDto;
 import com.stocks.stockalarms.repository.AlarmRepository;
 import com.stocks.stockalarms.repository.MonitoredStockRepository;
 import com.stocks.stockalarms.repository.PersonRepository;
@@ -43,8 +40,6 @@ public class AlarmServiceImpl implements AlarmService {
         String username = UserUtil.getCurrentUsername();
 
         MonitoredStock monitoredStock = monitoredStockRepository.findByPersonUsernameAndStockSymbol(username, alarmForm.getStockSymbol());
-
-
         if (monitoredStock == null) {
             Person person = personRepository.findByUsername(username);
             Stock stock = stockRepository.findBySymbol(alarmForm.getStockSymbol());
@@ -54,8 +49,15 @@ public class AlarmServiceImpl implements AlarmService {
             monitoredStock.setStock(stock);
             monitoredStock = monitoredStockRepository.save(monitoredStock);
         }
+// TODO: break method
+        Alarm alarm = null;
+        if (alarmForm.getId() != null) {
+            alarm = alarmRepository.getOne(alarmForm.getId());
+        }
+        if (alarm == null) {
+            alarm = new Alarm();
+        }
 
-        Alarm alarm = new Alarm();
         alarm.setMonitoredStock(monitoredStock);
         alarm.setRule(alarmForm.getRule());
         alarm.setAlarmPrice(calculateTargetPrice(monitoredStock.getStock().getPrice(), alarmForm.getRule()));

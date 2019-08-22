@@ -12,19 +12,23 @@
 
         <title>SB Admin - Dashboard</title>
 
+        <!-- Glyphycons (not part of the theme) -->
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css">
+
+
         <!-- Custom fonts for this template-->
         <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 
         <!-- Page level plugin CSS-->
         <link href="/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
 
-        <!-- Glyphycons (not part of the theme) -->
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css">
 
         <!-- Custom styles for this template-->
         <link href="/css/sb-admin.css" rel="stylesheet">
 
     </head>
+
+    <script src="/vendor/jquery/jquery.min.js"></script>
 
     <body id="page-top">
 
@@ -162,7 +166,6 @@
     </div>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="/vendor/jquery/jquery.min.js"></script>
     <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->

@@ -8,9 +8,9 @@ import lombok.Data;
 @Data
 public class AlarmForm {
 
-    private String stockSymbol;
+    private Long id;
 
-//    private Double refferencePrice;
+    private String stockSymbol;
 
     /**
      * Rule for calculating the alarmPrice

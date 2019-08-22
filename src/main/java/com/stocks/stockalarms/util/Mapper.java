@@ -25,6 +25,7 @@ public final class Mapper {
 
     public static final Function<Alarm, AlarmDto> toAlarmDto = (Alarm alarm) -> {
         AlarmDto alarmDto = new AlarmDto();
+        alarmDto.setId(alarm.getId());
         alarmDto.setActive(alarm.isActive());
         alarmDto.setAlarmPrice(alarm.getAlarmPrice());
         alarmDto.setReferencePrice(alarm.getRefferencePrice());
