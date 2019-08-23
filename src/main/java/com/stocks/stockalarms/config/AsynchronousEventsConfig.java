@@ -1,0 +1,24 @@
+package com.stocks.stockalarms.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.ApplicationEventMulticaster;
+import org.springframework.context.event.SimpleApplicationEventMulticaster;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
+
+/**
+ * By vlad.oltean on 2019-08-23.
+ */
+@Configuration
+public class AsynchronousEventsConfig {
+
+    @Bean(name = "applicationEventMulticaster")
+        public ApplicationEventMulticaster simpleApplicationEventMulticaster() {
+            SimpleApplicationEventMulticaster eventMulticaster
+                    = new SimpleApplicationEventMulticaster();
+
+            eventMulticaster.setTaskExecutor(new SimpleAsyncTaskExecutor("my-events"));
+            return eventMulticaster;
+        }
+
+}

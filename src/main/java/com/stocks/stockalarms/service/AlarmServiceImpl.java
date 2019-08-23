@@ -1,8 +1,11 @@
 package com.stocks.stockalarms.service;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +14,7 @@ import com.stocks.stockalarms.domain.Alarm;
 import com.stocks.stockalarms.domain.MonitoredStock;
 import com.stocks.stockalarms.domain.Person;
 import com.stocks.stockalarms.domain.Stock;
+import com.stocks.stockalarms.domain.event.StockUpdatedEvent;
 import com.stocks.stockalarms.dto.AlarmDto;
 import com.stocks.stockalarms.dto.AlarmForm;
 import com.stocks.stockalarms.repository.AlarmRepository;
@@ -75,6 +79,26 @@ public class AlarmServiceImpl implements AlarmService {
         return alarms.stream()
                 .map(Mapper.toAlarmDto)
                 .collect(Collectors.toList());
+    }
+
+    @EventListener
+    @Transactional
+    public void handleStockUpdate(StockUpdatedEvent stockUpdatedEvent) {
+        String symbol = stockUpdatedEvent.getStockSymbol();
+        BigDecimal stockPrice = stockUpdatedEvent.getPrice();
+
+        List<Alarm> alarms = alarmRepository.findAllByMonitoredStockStockSymbol(symbol);
+        List<Alarm> alarmsToTrigger = alarms.stream()
+                        .filter(alarm -> new BigDecimal(alarm.getAlarmPrice()).compareTo(stockPrice) <= 0)
+                        .collect(Collectors.toList());
+
+        Set<Long> monitoredStockIds = alarmsToTrigger.stream()
+                .map(alarm -> alarm.getMonitoredStock().getId())
+                .collect(Collectors.toSet());
+
+        Set<Person> personsToNotify = personRepository.findAllByMonitoredStocks(monitoredStockIds);
+
+        // TODO -> identify for which stocks to notify each person -> one mail per person with multiple stock data, if its the case.
     }
 
     private Double calculateTargetPrice(Double initialPrice, String rule) {

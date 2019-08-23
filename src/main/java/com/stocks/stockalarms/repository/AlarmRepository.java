@@ -16,6 +16,7 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
 
     List<Alarm> findAllByMonitoredStockPersonUsername(String username);
     List<Alarm> findAllByMonitoredStockPersonUsername(String username, Sort sort);
+    List<Alarm> findAllByMonitoredStockStockSymbol(String stockSymbol);
 
 
 

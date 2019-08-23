@@ -14,6 +14,7 @@ import com.stocks.stockalarms.domain.Stock;
 import com.stocks.stockalarms.domain.StockSymbol;
 import com.stocks.stockalarms.repository.StockRepository;
 import com.stocks.stockalarms.repository.StockSymbolRepository;
+import com.stocks.stockalarms.service.StockService;
 
 import lombok.AllArgsConstructor;
 
@@ -27,7 +28,7 @@ public class StockPoller {
     private static final Logger LOGGER = LoggerFactory.getLogger(StockPoller.class);
 
     private final StockSymbolRepository stockSymbolRepository;
-    private final StockRepository stockRepository;
+    private final StockService stockService;
     private final AlphavantageGateway alphavantageGateway;
 
     @Scheduled(fixedRateString = "${alphavantage.poller-rate}")
@@ -39,28 +40,28 @@ public class StockPoller {
                 .collect(Collectors.toMap(StockSymbol::getSymbol, Function.identity()));
 
 
-        // api permits loading only 5 per minute... so, after 5 wait one minute
-        // todo: launch different thread each minute?
-        int counter = 0;
+        // API permits loading only 5 stocks per minute... so, after 5 loaded stocks wait one minute
+        int loadedStocks = 0;
 
         for (String symbol : symbolStockSymbolMap.keySet()) {
-            counter++;
+            loadedStocks++;
 
             LOGGER.debug(String.format("Loading most recent data for %s", symbol));
             try{
                 GlobalQuoteResponse globalQuoteResponse = alphavantageGateway.getMostRecentQuoteBySymbol(symbol);
                 saveStock(symbolStockSymbolMap, globalQuoteResponse);
+
                 LOGGER.debug(String.format("Response:%n%s", globalQuoteResponse));
             } catch (Exception e){
                 LOGGER.error("Exception polling for %s...", e);
-                LOGGER.error("Continue despite error....");
+                LOGGER.warn("Continue despite error....");
             }
 
 
-            if (counter == 5) {
+            if (loadedStocks == 5) {
                 LOGGER.debug("Waiting 1 minute....");
-                Thread.sleep(70000);
-                counter = 0;
+                Thread.sleep(65000);
+                loadedStocks = 0;
             }
 
         }
@@ -74,7 +75,7 @@ public class StockPoller {
         stock.setChangePercent(Double.valueOf(globalQuoteResponse.getChangePercent().substring(0,
                 globalQuoteResponse.getChangePercent().length() - 1)));
         stock.setCompanyName(symbolStockSymbolMap.get(globalQuoteResponse.getSymbol()).getName());
-        stockRepository.save(stock);
+        stockService.save(stock);
     }
 
 }
