@@ -9,12 +9,17 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * By vlad.oltean on 2019-08-19.
  */
 @Entity
-@Data
+@Getter
+@Setter
+@ToString(exclude = {"stock", "person"})
 public class MonitoredStock {
 
     @Id

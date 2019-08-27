@@ -1,5 +1,7 @@
 package com.stocks.stockalarms.domain;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -7,12 +9,17 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * By vlad.oltean on 2019-08-19.
  */
 @Entity
-@Data
+@Getter
+@Setter
+@ToString(exclude = "monitoredStock")
 public class Alarm {
 
     @Id
@@ -29,7 +36,7 @@ public class Alarm {
      */
     private String rule;
 
-    private Double alarmPrice;
+    private BigDecimal alarmPrice;
 
     private boolean active;
 }

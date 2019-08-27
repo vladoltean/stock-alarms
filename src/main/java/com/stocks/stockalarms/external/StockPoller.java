@@ -31,7 +31,7 @@ public class StockPoller {
     private final StockService stockService;
     private final AlphavantageGateway alphavantageGateway;
 
-    @Scheduled(fixedRateString = "${alphavantage.poller-rate}")
+//    @Scheduled(fixedRateString = "${alphavantage.poller-rate}")
     public void getStockData() throws InterruptedException {
         List<StockSymbol> stockSymbols = stockSymbolRepository.findAll();
 

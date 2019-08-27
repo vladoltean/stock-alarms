@@ -5,11 +5,13 @@ import java.math.BigDecimal;
 import org.springframework.context.ApplicationEvent;
 
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * By vlad.oltean on 2019-08-23.
  */
 @Getter
+@ToString
 public class StockUpdatedEvent extends ApplicationEvent {
 
     private String stockSymbol;

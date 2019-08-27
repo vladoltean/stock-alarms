@@ -1,14 +1,20 @@
 package com.stocks.stockalarms.service;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.MultiValueMap;
 
 import com.stocks.stockalarms.domain.Alarm;
 import com.stocks.stockalarms.domain.MonitoredStock;
@@ -17,11 +23,13 @@ import com.stocks.stockalarms.domain.Stock;
 import com.stocks.stockalarms.domain.event.StockUpdatedEvent;
 import com.stocks.stockalarms.dto.AlarmDto;
 import com.stocks.stockalarms.dto.AlarmForm;
+import com.stocks.stockalarms.dto.PersonWithAlarm;
 import com.stocks.stockalarms.repository.AlarmRepository;
 import com.stocks.stockalarms.repository.MonitoredStockRepository;
 import com.stocks.stockalarms.repository.PersonRepository;
 import com.stocks.stockalarms.repository.StockRepository;
 import com.stocks.stockalarms.util.Mapper;
+import com.stocks.stockalarms.util.MyCollectors;
 import com.stocks.stockalarms.util.UserUtil;
 
 import lombok.AllArgsConstructor;
@@ -32,6 +40,10 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class AlarmServiceImpl implements AlarmService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AlarmServiceImpl.class);
+
+    private final EmailService emailService;
 
     private final MonitoredStockRepository monitoredStockRepository;
     private final AlarmRepository alarmRepository;
@@ -65,7 +77,7 @@ public class AlarmServiceImpl implements AlarmService {
 
         alarm.setMonitoredStock(monitoredStock);
         alarm.setRule(alarmForm.getRule());
-        alarm.setAlarmPrice(calculateTargetPrice(monitoredStock.getStock().getPrice(), alarmForm.getRule()));
+        alarm.setAlarmPrice(calculateTargetPrice(BigDecimal.valueOf(monitoredStock.getStock().getPrice()), alarmForm.getRule()));
         alarm.setRefferencePrice(monitoredStock.getStock().getPrice());
 
         alarmRepository.save(alarm);
@@ -84,33 +96,43 @@ public class AlarmServiceImpl implements AlarmService {
     @EventListener
     @Transactional
     public void handleStockUpdate(StockUpdatedEvent stockUpdatedEvent) {
+        LOGGER.debug("Received stock updated event: {}", stockUpdatedEvent);
         String symbol = stockUpdatedEvent.getStockSymbol();
         BigDecimal stockPrice = stockUpdatedEvent.getPrice();
 
-        List<Alarm> alarms = alarmRepository.findAllByMonitoredStockStockSymbol(symbol);
-        List<Alarm> alarmsToTrigger = alarms.stream()
-                        .filter(alarm -> new BigDecimal(alarm.getAlarmPrice()).compareTo(stockPrice) <= 0)
-                        .collect(Collectors.toList());
 
-        Set<Long> monitoredStockIds = alarmsToTrigger.stream()
-                .map(alarm -> alarm.getMonitoredStock().getId())
-                .collect(Collectors.toSet());
+        List<PersonWithAlarm> personWithAlarms = alarmRepository.findPersonsWithAlarmsForStock(symbol, stockPrice);
+        MultiValueMap<String, PersonWithAlarm> personWithAlarmsMap = personWithAlarms
+                .stream()
+                .collect(MyCollectors.toMultiValueMap(PersonWithAlarm::getUsername, Function.identity()));
 
-        Set<Person> personsToNotify = personRepository.findAllByMonitoredStocks(monitoredStockIds);
+
+       emailService.send(personWithAlarmsMap);
+
+
 
         // TODO -> identify for which stocks to notify each person -> one mail per person with multiple stock data, if its the case.
     }
 
-    private Double calculateTargetPrice(Double initialPrice, String rule) {
-        boolean add = rule.startsWith("+");
-        Double percent = Double.valueOf(rule.substring(1));
+    private static Function<Person, List<Alarm>> getAlarms = (person) -> {
+        return person.getMonitoredStocks()
+                .stream()
+                .map(MonitoredStock::getAlarms)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+    };
 
-        Double percentValueOfInitialPrice = (initialPrice * percent / 100);
+    private BigDecimal calculateTargetPrice(BigDecimal initialPrice, String rule) {
+        boolean add = rule.startsWith("+");
+        double percent = Double.parseDouble(rule.substring(1));
+
+        BigDecimal percentValueOfInitialPrice = (initialPrice.multiply(BigDecimal.valueOf(percent))
+                .divide(BigDecimal.valueOf(100)));
 
         if (add) {
-            return initialPrice + percentValueOfInitialPrice;
+            return initialPrice.add(percentValueOfInitialPrice);
         } else {
-            return initialPrice - percentValueOfInitialPrice;
+            return initialPrice.add(percentValueOfInitialPrice);
         }
 
     }

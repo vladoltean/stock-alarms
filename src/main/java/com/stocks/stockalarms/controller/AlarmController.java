@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +34,10 @@ public class AlarmController {
     private AlarmService alarmService;
 
     @GetMapping
-    public String alarms(Model model, @RequestParam String sortBy) {
+    public String alarms(Model model, @RequestParam(required = false) String sortBy) {
+        if(StringUtils.isEmpty(sortBy)){
+            sortBy = "monitoredStock.stock.symbol";
+        }
         model.addAttribute("alarms", alarmService.findAllForUser(UserUtil.getCurrentUsername(), processSort(sortBy)));
         return "alarms";
     }

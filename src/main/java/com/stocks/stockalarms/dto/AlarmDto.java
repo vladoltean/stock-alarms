@@ -1,5 +1,7 @@
 package com.stocks.stockalarms.dto;
 
+import java.math.BigDecimal;
+
 import lombok.Data;
 
 /**
@@ -16,7 +18,7 @@ public class AlarmDto {
 
     private boolean active;
 
-    private Double alarmPrice;
+    private BigDecimal alarmPrice;
 
     /**
      * Variance as percentage from the price when the alarm was defined (referencePrice) and the current price of the monitored stock.

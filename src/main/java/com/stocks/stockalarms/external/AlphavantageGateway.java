@@ -34,23 +34,11 @@ public class AlphavantageGateway {
         URI quoteUrl = alphavantageProperties.getQuoteUrl(symbol);
 
         try{
-            GlobalQuoteResponse globalQuoteResponse = restTemplate.getForObject(quoteUrl, GlobalQuoteResponse.class);
-            return globalQuoteResponse;
+            return restTemplate.getForObject(quoteUrl, GlobalQuoteResponse.class);
         } catch (RestClientException e){
-            LOGGER.error("Error calling alphavantage API: ", e);
+            LOGGER.error(String.format("Error calling alphavantage API for symbol %s: ", symbol), e);
             throw e;
         }
-    }
-
-
-    public static void main(String[] args) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.UNWRAP_ROOT_VALUE, true);
-
-        GlobalQuoteResponse resp = mapper.readValue(new File("/Users/vlad.oltean/java/stock-alarms/src/main/resources/test.json"), GlobalQuoteResponse.class);
-
-
-        System.out.println(resp);
     }
 
 }
