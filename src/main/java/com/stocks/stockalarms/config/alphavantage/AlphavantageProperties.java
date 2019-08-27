@@ -5,7 +5,6 @@ import java.net.URI;
 import javax.validation.constraints.Min;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -31,13 +30,15 @@ public class AlphavantageProperties {
 
     enum Functions {
         GLOBAL_QUOTE,
-        TIME_SERIES_INTRADAY
+        TIME_SERIES_INTRADAY,
+        SYMBOL_SEARCH
     }
 
     @Getter
     enum ParameterNames {
         FUNCTION("function"),
         SYMBOL("symbol"),
+        KEYWORDS("keywords"),
         API_KEY("apikey"),
         INTERVAL("interval");
 
@@ -56,6 +57,18 @@ public class AlphavantageProperties {
                 .queryParam(ParameterNames.API_KEY.getValue(), apiToken)
                 .queryParam(ParameterNames.FUNCTION.getValue(), Functions.GLOBAL_QUOTE.name())
                 .queryParam(ParameterNames.SYMBOL.getValue(), symbol)
+                .build()
+                .toUri();
+    }
+
+    public URI getSymbolSearchUrl(String query) {
+        return UriComponentsBuilder.newInstance()
+                .scheme("https")
+                .host(apiUrl)
+                .path(apiQuery)
+                .queryParam(ParameterNames.API_KEY.getValue(), apiToken)
+                .queryParam(ParameterNames.FUNCTION.getValue(), Functions.SYMBOL_SEARCH.name())
+                .queryParam(ParameterNames.KEYWORDS.getValue(), query)
                 .build()
                 .toUri();
     }

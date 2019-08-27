@@ -1,7 +1,8 @@
-package com.stocks.stockalarms.config.alphavantage;
+package com.stocks.stockalarms.config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.context.annotation.Bean;
@@ -12,16 +13,15 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.stocks.stockalarms.config.LoggingRequestInterceptor;
 
 /**
  * By vlad.oltean on 2019-08-18.
  */
 @Configuration
-public class AlphavantageRestTemplateConfig {
+public class RestTemplateConfig {
 
     @Bean
-    public RestTemplate alphavantageRestTemplate() {
+    public RestTemplate unwrapRootValueRestTemplate() {
         RestTemplate restTemplate = new RestTemplate();
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -32,9 +32,14 @@ public class AlphavantageRestTemplateConfig {
 
         restTemplate.setMessageConverters(Arrays.asList(mapper));
 
-        List<ClientHttpRequestInterceptor> interceptors = getClientHttpRequestInterceptors();
-//        restTemplate.setInterceptors(interceptors);
+        return restTemplate;
+    }
 
+    @Bean
+    public RestTemplate restTemplate() {
+        RestTemplate restTemplate = new RestTemplate();
+        MappingJackson2HttpMessageConverter mapper = new MappingJackson2HttpMessageConverter();
+        restTemplate.setMessageConverters(Collections.singletonList(mapper));
         return restTemplate;
     }
 

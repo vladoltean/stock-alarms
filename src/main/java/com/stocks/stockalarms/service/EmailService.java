@@ -1,7 +1,5 @@
 package com.stocks.stockalarms.service;
 
-import java.util.List;
-
 import org.springframework.util.MultiValueMap;
 
 import com.stocks.stockalarms.dto.PersonWithAlarm;

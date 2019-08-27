@@ -12,13 +12,14 @@ import lombok.AllArgsConstructor;
 public class HelloController {
 
     @GetMapping("/hello")
-    public HelloObject hello(){
+    public HelloObject hello() {
         return new HelloObject("Helllooooo");
     }
 
 
     @AllArgsConstructor
     private static class HelloObject {
+
         private String message;
     }
 

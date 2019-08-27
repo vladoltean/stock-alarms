@@ -1,11 +1,8 @@
 package com.stocks.stockalarms.external;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import lombok.Data;
 import lombok.ToString;
 
 /**
@@ -31,6 +28,7 @@ public class GlobalQuoteResponse {
     public String getSymbol() {
         return symbol;
     }
+
     @JsonProperty("01. symbol")
     public void setSymbol(String symbol) {
         this.symbol = symbol;
@@ -41,6 +39,7 @@ public class GlobalQuoteResponse {
     public String getOpen() {
         return open;
     }
+
     @JsonProperty("02. open")
     public void setOpen(String open) {
         this.open = open;
@@ -51,6 +50,7 @@ public class GlobalQuoteResponse {
     public String getHigh() {
         return high;
     }
+
     @JsonProperty("03. high")
     public void setHigh(String high) {
         this.high = high;
@@ -61,6 +61,7 @@ public class GlobalQuoteResponse {
     public String getLow() {
         return low;
     }
+
     @JsonProperty("04. low")
     public void setLow(String low) {
         this.low = low;
@@ -71,6 +72,7 @@ public class GlobalQuoteResponse {
     public String getPrice() {
         return price;
     }
+
     @JsonProperty("05. price")
     public void setPrice(String price) {
         this.price = price;
@@ -81,6 +83,7 @@ public class GlobalQuoteResponse {
     public String getVolume() {
         return volume;
     }
+
     @JsonProperty("06. volume")
     public void setVolume(String volume) {
         this.volume = volume;
@@ -91,6 +94,7 @@ public class GlobalQuoteResponse {
     public String getLatestTradingDay() {
         return latestTradingDay;
     }
+
     @JsonProperty("07. latest trading day")
     public void setLatestTradingDay(String latestTradingDay) {
         this.latestTradingDay = latestTradingDay;
@@ -101,6 +105,7 @@ public class GlobalQuoteResponse {
     public String getPreviousClose() {
         return previousClose;
     }
+
     @JsonProperty("08. previous close")
     public void setPreviousClose(String previousClose) {
         this.previousClose = previousClose;
@@ -111,6 +116,7 @@ public class GlobalQuoteResponse {
     public String getChange() {
         return change;
     }
+
     @JsonProperty("09. change")
     public void setChange(String change) {
         this.change = change;
@@ -121,6 +127,7 @@ public class GlobalQuoteResponse {
     public String getChangePercent() {
         return changePercent;
     }
+
     @JsonProperty("10. change percent")
     public void setChangePercent(String changePercent) {
         this.changePercent = changePercent;

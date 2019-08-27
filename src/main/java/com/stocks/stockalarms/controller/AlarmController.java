@@ -35,7 +35,7 @@ public class AlarmController {
 
     @GetMapping
     public String alarms(Model model, @RequestParam(required = false) String sortBy) {
-        if(StringUtils.isEmpty(sortBy)){
+        if (StringUtils.isEmpty(sortBy)) {
             sortBy = "monitoredStock.stock.symbol";
         }
         model.addAttribute("alarms", alarmService.findAllForUser(UserUtil.getCurrentUsername(), processSort(sortBy)));
@@ -44,10 +44,10 @@ public class AlarmController {
 
     private Sort processSort(@RequestParam String sortBy) {
         Sort.Direction direction;
-        if(sortBy.startsWith("-")){
+        if (sortBy.startsWith("-")) {
             direction = Sort.Direction.DESC;
             sortBy = sortBy.substring(1);
-        } else if (sortBy.startsWith("+") ){
+        } else if (sortBy.startsWith("+")) {
             direction = Sort.Direction.ASC;
             sortBy = sortBy.substring(1);
         } else {

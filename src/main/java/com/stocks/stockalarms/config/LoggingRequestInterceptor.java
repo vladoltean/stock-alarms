@@ -31,7 +31,7 @@ public class LoggingRequestInterceptor implements ClientHttpRequestInterceptor {
         LOGGER.info("===========================request begin================================================");
         LOGGER.debug("URI         : {}", request.getURI());
         LOGGER.debug("Method      : {}", request.getMethod());
-        LOGGER.debug("Headers     : {}", request.getHeaders() );
+        LOGGER.debug("Headers     : {}", request.getHeaders());
         LOGGER.debug("Request body: {}", new String(body, StandardCharsets.UTF_8));
         LOGGER.info("==========================request end================================================");
     }

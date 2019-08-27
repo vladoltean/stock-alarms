@@ -18,6 +18,8 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
     @Cacheable(cacheNames = "all-stocks")
     List<Stock> findAll();
 
+    List<Stock> findAllByMonitoredStocksPersonUsername(String username);
+
     @CacheEvict(cacheNames = "all-stocks")
     Stock save(Stock stock);
 

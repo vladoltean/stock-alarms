@@ -1,10 +1,11 @@
 package com.stocks.stockalarms.domain;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import lombok.Data;
 
@@ -25,4 +26,7 @@ public class Stock {
     private Double price;
 
     private Double changePercent;
+
+    @OneToMany(mappedBy = "stock")
+    private Set<MonitoredStock> monitoredStocks;
 }

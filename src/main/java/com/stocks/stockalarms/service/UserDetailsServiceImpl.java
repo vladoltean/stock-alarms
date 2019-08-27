@@ -1,7 +1,5 @@
 package com.stocks.stockalarms.service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -15,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.stocks.stockalarms.domain.Person;
-import com.stocks.stockalarms.domain.Role;
 import com.stocks.stockalarms.repository.PersonRepository;
 
 import lombok.AllArgsConstructor;
@@ -33,7 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Person person = personRepository.findByUsername(username);
-        if(person == null) {
+        if (person == null) {
             throw new UsernameNotFoundException(username);
         }
 

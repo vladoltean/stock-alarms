@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.stocks.stockalarms.domain.Person;
-import com.stocks.stockalarms.domain.Role;
 import com.stocks.stockalarms.repository.PersonRepository;
 import com.stocks.stockalarms.repository.RoleRepository;
 
@@ -29,7 +28,7 @@ public class PersonServiceImpl implements PersonService {
     @Transactional
     public void save(Person person) {
         person.setPassword(bCryptPasswordEncoder.encode(person.getPassword()));
-        person.setRoles(new HashSet<>(roleRepository.findAll()) );
+        person.setRoles(new HashSet<>(roleRepository.findAll()));
 
         new HashSet<>(roleRepository.findAll());
 

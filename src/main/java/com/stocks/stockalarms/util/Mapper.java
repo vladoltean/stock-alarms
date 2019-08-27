@@ -40,14 +40,13 @@ public final class Mapper {
      * Calculates the percentage of the initial value that is needed to get (by summing) to the currentValue.
      */
     private static double getVarianceAsPercentage(double initialValue, double currentValue) {
-        return  ( 100 * ( currentValue - initialValue ) / initialValue );
+        return (100 * (currentValue - initialValue) / initialValue);
 
     }
 
     public static void main(String[] args) {
         System.out.println(getVarianceAsPercentage(10, 8));
     }
-
 
 
 }

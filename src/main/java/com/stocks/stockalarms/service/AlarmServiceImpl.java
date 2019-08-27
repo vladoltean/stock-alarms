@@ -3,7 +3,6 @@ package com.stocks.stockalarms.service;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -13,7 +12,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.MultiValueMap;
 
 import com.stocks.stockalarms.domain.Alarm;
@@ -107,8 +105,7 @@ public class AlarmServiceImpl implements AlarmService {
                 .collect(MyCollectors.toMultiValueMap(PersonWithAlarm::getUsername, Function.identity()));
 
 
-       emailService.send(personWithAlarmsMap);
-
+        emailService.send(personWithAlarmsMap);
 
 
         // TODO -> identify for which stocks to notify each person -> one mail per person with multiple stock data, if its the case.

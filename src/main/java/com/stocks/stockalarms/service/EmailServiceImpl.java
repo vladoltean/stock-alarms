@@ -1,6 +1,5 @@
 package com.stocks.stockalarms.service;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -10,7 +9,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
 
 import com.stocks.stockalarms.dto.PersonWithAlarm;
 
@@ -18,7 +16,7 @@ import com.stocks.stockalarms.dto.PersonWithAlarm;
  * By vlad.oltean on 2019-08-23.
  */
 @Service
-public class EmailServiceImpl implements EmailService{
+public class EmailServiceImpl implements EmailService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SecurityServiceImpl.class);
 

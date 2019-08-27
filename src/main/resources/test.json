@@ -1,14 +1,103 @@
 {
-  "Global Quote": {
-    "01. symbol": "CZR",
-    "02. open": "11.5300",
-    "03. high": "11.5500",
-    "04. low": "11.4200",
-    "05. price": "11.5500",
-    "06. volume": "7459183",
-    "07. latest trading day": "2019-08-16",
-    "08. previous close": "11.4500",
-    "09. change": "0.1000",
-    "10. change percent": "0.8734%"
-  }
+  "bestMatches": [
+    {
+      "1. symbol": "BA",
+      "2. name": "The Boeing Company",
+      "3. type": "Equity",
+      "4. region": "United States",
+      "5. marketOpen": "09:30",
+      "6. marketClose": "16:00",
+      "7. timezone": "UTC-04",
+      "8. currency": "USD",
+      "9. matchScore": "1.0000"
+    },
+    {
+      "1. symbol": "BABA",
+      "2. name": "Alibaba Group Holding Limited",
+      "3. type": "Equity",
+      "4. region": "United States",
+      "5. marketOpen": "09:30",
+      "6. marketClose": "16:00",
+      "7. timezone": "UTC-04",
+      "8. currency": "USD",
+      "9. matchScore": "0.8000"
+    },
+    {
+      "1. symbol": "BAC",
+      "2. name": "Bank of America Corporation",
+      "3. type": "Equity",
+      "4. region": "United States",
+      "5. marketOpen": "09:30",
+      "6. marketClose": "16:00",
+      "7. timezone": "UTC-04",
+      "8. currency": "USD",
+      "9. matchScore": "0.8000"
+    },
+    {
+      "1. symbol": "GOLD",
+      "2. name": "Barrick Gold Corporation",
+      "3. type": "Equity",
+      "4. region": "United States",
+      "5. marketOpen": "09:30",
+      "6. marketClose": "16:00",
+      "7. timezone": "UTC-04",
+      "8. currency": "USD",
+      "9. matchScore": "0.6667"
+    },
+    {
+      "1. symbol": "BIDU",
+      "2. name": "Baidu Inc.",
+      "3. type": "Equity",
+      "4. region": "United States",
+      "5. marketOpen": "09:30",
+      "6. marketClose": "16:00",
+      "7. timezone": "UTC-04",
+      "8. currency": "USD",
+      "9. matchScore": "0.5714"
+    },
+    {
+      "1. symbol": "BAYRY",
+      "2. name": "Bayer Aktiengesellschaft",
+      "3. type": "Equity",
+      "4. region": "United States",
+      "5. marketOpen": "09:30",
+      "6. marketClose": "16:00",
+      "7. timezone": "UTC-04",
+      "8. currency": "USD",
+      "9. matchScore": "0.3333"
+    },
+    {
+      "1. symbol": "BZUN",
+      "2. name": "Baozun Inc.",
+      "3. type": "Equity",
+      "4. region": "United States",
+      "5. marketOpen": "09:30",
+      "6. marketClose": "16:00",
+      "7. timezone": "UTC-04",
+      "8. currency": "USD",
+      "9. matchScore": "0.3333"
+    },
+    {
+      "1. symbol": "BLDP",
+      "2. name": "Ballard Power Systems Inc.",
+      "3. type": "Equity",
+      "4. region": "United States",
+      "5. marketOpen": "09:30",
+      "6. marketClose": "16:00",
+      "7. timezone": "UTC-04",
+      "8. currency": "USD",
+      "9. matchScore": "0.3333"
+    },
+    {
+      "1. symbol": "BAX",
+      "2. name": "Baxter International Inc.",
+      "3. type": "Equity",
+      "4. region": "United States",
+      "5. marketOpen": "09:30",
+      "6. marketClose": "16:00",
+      "7. timezone": "UTC-04",
+      "8. currency": "USD",
+      "9. matchScore": "0.1538"
+    }
+  ]
 }

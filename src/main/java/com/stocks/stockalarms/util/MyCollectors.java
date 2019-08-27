@@ -1,7 +1,6 @@
 package com.stocks.stockalarms.util;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
@@ -52,6 +51,7 @@ public class MyCollectors {
      * @param <R> the type of the result
      */
     static class CollectorImpl<T, A, R> implements Collector<T, A, R> {
+
         private final Supplier<A> supplier;
         private final BiConsumer<A, T> accumulator;
         private final BinaryOperator<A> combiner;

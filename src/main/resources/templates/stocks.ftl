@@ -13,10 +13,34 @@
         </div>
     </#if>
 
+    <#if stockSaved??>
+        <div class="alert alert-success" role="alert">
+            Started monitoring stock! Now you can set alarms on it.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </#if>
+
+        <form id="add-stock-to-monitor-form" method="post" action="stocks/monitor">
+            <div class="input-group">
+                <input id="monitor-stock-name" class="form-control" type="text" name="name" autocomplete="off"
+                       placeholder="Search for stocks to monitor...">
+                <div class="input-group-append">
+                    <button type="submit" form="add-stock-to-monitor-form" class="btn btn-primary">Monitor Stock</button>
+                </div>
+
+            </div>
+            <input id="monitor-stock-symbol-hidden" type="hidden" name="symbol">
+        </form>
+
+    <br>
+
     <table class="table table-striped">
         <thead class="thead-dark">
         <tr>
             <th scope="col">Symbol</th>
+            <th scope="col">Company name</th>
             <th scope="col">Price</th>
             <th scope="col">Change</th>
             <th scope="col"></th>
@@ -28,6 +52,7 @@
             <#if stock.symbol??>
                 <tr>
                     <th scope="row">${stock.symbol!'N/A'}</th>
+                    <td>${stock.companyName!'N/A'}</td>
                     <td>${stock.price!'N/A'}</td>
                     <td>${stock.changePercent!'N/A'}</td>
                     <td>
@@ -66,7 +91,7 @@
                 </div>
                 <div class="modal-body">
                     <form id="add-alarm-form" method="POST" action="alarms">
-<#--                        TODO: Add tooltip and validation to rule-->
+                        <#--                        TODO: Add tooltip and validation to rule-->
                         <input id="stockSymbol" class="form-control" type="text" placeholder="Stock Symbol" name="stockSymbol">
                         <input class="form-control" type="text" placeholder="Rule" name="rule">
                     </form>
@@ -79,7 +104,6 @@
         </div>
     </div>
 
-<#--    TODO: it is not working anymore --> fix it -->
     <script>
         $('#addAlarmModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget); // Button that triggered the modal
@@ -90,6 +114,17 @@
             modal.find('.modal-title').text('Add alarm for ' + symbol);
             modal.find('#stockSymbol').val(symbol);
         })
+
+        $('#monitor-stock-name').typeahead({
+            ajax: '/test/search',
+            valueField: 'symbol',
+            displayField: 'name',
+            onSelect: function (arg) {
+                $('#monitor-stock-symbol-hidden').val(arg.value);
+            }
+        });
+
+
     </script>
 
 </@layout.myLayout>
