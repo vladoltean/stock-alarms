@@ -102,13 +102,10 @@ public class AlarmServiceImpl implements AlarmService {
         List<PersonWithAlarm> personWithAlarms = alarmRepository.findPersonsWithAlarmsForStock(symbol, stockPrice);
         MultiValueMap<String, PersonWithAlarm> personWithAlarmsMap = personWithAlarms
                 .stream()
+                .peek(p -> p.setCurrentPrice(stockPrice))
                 .collect(MyCollectors.toMultiValueMap(PersonWithAlarm::getUsername, Function.identity()));
 
-
         emailService.send(personWithAlarmsMap);
-
-
-        // TODO -> identify for which stocks to notify each person -> one mail per person with multiple stock data, if its the case.
     }
 
     private static Function<Person, List<Alarm>> getAlarms = (person) -> {

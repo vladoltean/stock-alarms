@@ -29,11 +29,11 @@
         <#list alarms as alarm>
             <tr>
                 <th scope="row">${alarm.stock.symbol!'N/A'}</th>
-                <td>${alarm.referencePrice!'N/A'}</td>
-                <td>${alarm.stock.price!'N/A'}</td>
+                <td>$${alarm.referencePrice!'N/A'}</td>
+                <td>$${alarm.stock.price!'N/A'}</td>
                 <td>${alarm.variance!'N/A'}</td>
                 <td>${alarm.rule!'N/A'}</td>
-                <td>${alarm.alarmPrice!'N/A'}</td>
+                <td>$${alarm.alarmPrice!'N/A'}</td>
                 <td>
                     <button type="button" class="btn btn-info" data-toggle="modal"
                             data-target="#editAlarmModal" data-symbol="${alarm.stock.symbol}" data-initial-price="${alarm.referencePrice}"

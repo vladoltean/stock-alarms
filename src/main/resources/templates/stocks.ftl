@@ -53,7 +53,7 @@
                 <tr>
                     <th scope="row">${stock.symbol!'N/A'}</th>
                     <td>${stock.companyName!'N/A'}</td>
-                    <td>${stock.price!'N/A'}</td>
+                    <td>$${stock.price!'N/A'}</td>
                     <td>${stock.changePercent!'N/A'}</td>
                     <td>
                         <#assign changePercentNumber = stock.changePercent?remove_ending("%")?number>

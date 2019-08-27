@@ -29,13 +29,19 @@ public class EmailServiceImpl implements EmailService {
             LOGGER.debug(String.format("Sending the following alarms to %s:", key));
             alarms.forEach(alarm -> LOGGER.debug(alarm.toString()));
 
-            String alarmsInfo = alarms.stream().map(Object::toString).collect(Collectors.joining("\n"));
+            StringBuilder content = new StringBuilder();
+            content.append("Hello, ").append(alarms.get(0).getFirstName()).append("!\n");
+            alarms.forEach(alarm -> {
+                content.append(String.format("Stock %s has reached $%s! Alarm was set to $%s.%n", alarm.getStockSymbol(),
+                        alarm.getCurrentPrice(), alarm.getAlarmPrice()));
+            });
 
             SimpleMailMessage msg = new SimpleMailMessage();
-            msg.setTo("vladoltean1193@gmail.com");
-
-            msg.setSubject("Stock Alarm(s)!");
-            msg.setText("Hello, Vlad!\n The following stocks have reached the desired prices: \n" + alarmsInfo);
+            msg.setTo(key);
+            msg.setSubject("Stock Alarm for "
+                    + alarms.stream().map(PersonWithAlarm::getStockSymbol).collect(Collectors.joining(", "))
+                    + "\n");
+            msg.setText(content.toString());
 
             javaMailSender.send(msg);
 

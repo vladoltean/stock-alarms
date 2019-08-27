@@ -49,15 +49,4 @@ public class AlphavantageGateway {
         }
     }
 
-//    public static void main(String[] args) throws IOException {
-//        ObjectMapper mapper = new ObjectMapper();
-////        mapper.configure(DeserializationFeature.UNWRAP_ROOT_VALUE, true);
-//
-//        SymbolSearchResponse resp = mapper.readValue(new File("/Users/vlad.oltean/java/stock-alarms/src/main/resources/test.json"),
-//                SymbolSearchResponse.class);
-//
-//
-//        System.out.println(resp);
-//    }
-
 }
