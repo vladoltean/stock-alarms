@@ -29,6 +29,7 @@
             <th scope="col">Target variance</th>
             <th scope="col">Target price</th>
             <th></th>
+            <th></th>
 
         </tr>
         </thead>
@@ -47,6 +48,14 @@
                             data-current-price="${alarm.stock.price}" data-rule="${alarm.rule}" data-variance="${alarm.variance}"
                             data-id="${alarm.id}">
                         Edit
+                    </button>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger" data-toggle="modal"
+                            data-target="#deleteAlarmModal" data-symbol="${alarm.stock.symbol}" data-initial-price="${alarm.referencePrice}"
+                            data-current-price="${alarm.stock.price}" data-rule="${alarm.rule}" data-variance="${alarm.variance}"
+                            data-id="${alarm.id}">
+                        X
                     </button>
                 </td>
             </tr>
@@ -96,7 +105,6 @@
                 </div>
                 <div class="modal-body">
                     <form id="add-alarm-form" method="POST" action="alarms">
-                        <#--                        TODO: Add tooltip and validation to rule-->
                         <div>
                             <h4>Symbol</h4>
                             <p id="stockSymbolInfo">GHR</p>
@@ -128,6 +136,52 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="deleteAlarmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit alarm</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4 class="text-danger">Are you sure you want to delete the following alarm?</h4>
+                    <br>
+                    <form id="add-alarm-form">
+                        <div>
+                            <h5>Symbol</h5>
+                            <p id="stockSymbolInfo">GHR</p>
+                        </div>
+                        <div>
+                            <h5>Initial price</h5>
+                            <p id="initialPriceInfo">20.3</p>
+                        </div>
+                        <div>
+                            <h4>Current price</h4>
+                            <p id="currentPriceInfo">22.3</p>
+                        </div>
+                        <div>
+                            <h5>Variance</h5>
+                            <p id="varianceInfo">22.3</p>
+                        </div>
+                        <div>
+                            <h5>Target Variance</h5>
+                            <p id="rule">22.3</p>
+                        </div>
+
+                        <input id="identifier" type="number" name="id" value="5" hidden>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="delete-alarm" form="add-alarm-form" class="btn btn-danger">Delete Alarm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         $('#editAlarmModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget); // Button that triggered the modal
@@ -140,7 +194,7 @@
 
             var modal = $(this);
 
-            modal.find('.modal-title').text('Add alarm for ' + symbol);
+            modal.find('.modal-title').text('Edit alarm for ' + symbol);
             modal.find('#identifier').val(id);
             modal.find('#stockSymbol').val(symbol);
             modal.find('#rule').val(rule);
@@ -148,6 +202,44 @@
             modal.find('#initialPriceInfo').text(initialPrice);
             modal.find('#currentPriceInfo').text(currentPrice);
             modal.find('#varianceInfo').text(variance);
+        })
+        $('#deleteAlarmModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var symbol = button.data('symbol'); // Extract info from data-* attributes
+            var initialPrice = button.data('initial-price');
+            var currentPrice = button.data('current-price');
+            var variance = button.data('variance');
+            var rule = button.data('rule');
+            var id = button.data('id');
+
+            var modal = $(this);
+
+            modal.find('.modal-title').text('Delete alarm for ' + symbol);
+            modal.find('#identifier').val(id);
+            modal.find('#rule').text(rule);
+            modal.find('#stockSymbolInfo').text(symbol);
+            modal.find('#initialPriceInfo').text(initialPrice);
+            modal.find('#currentPriceInfo').text(currentPrice);
+            modal.find('#varianceInfo').text(variance);
+            modal.find('#delete-alarm').data('id', id);
+        });
+        $('#delete-alarm').click(function(){
+            // var button = $(event.relatedTarget);
+            var id = $(this).data('id');
+
+            console.log("id", id);
+
+            $.ajax({
+                success: function(){
+                    window.location.reload();
+                },
+                error: function(err){
+                    console.log("Error deleting alarm!", err);
+                },
+                processData: false,
+                type: 'DELETE',
+                url: '/alarms/' + id
+            });
         })
     </script>
 

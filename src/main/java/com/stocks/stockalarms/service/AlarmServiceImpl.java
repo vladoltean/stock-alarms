@@ -11,9 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 
 import com.stocks.stockalarms.domain.Alarm;
 import com.stocks.stockalarms.domain.MonitoredStock;
@@ -86,6 +89,18 @@ public class AlarmServiceImpl implements AlarmService {
         alarm.setActive(true);
 
         alarmRepository.save(alarm);
+    }
+
+    @Override
+    @Transactional
+    public void delete(Long id, String username) {
+        // validate user has right to delete it?
+        List<Alarm> alarms = alarmRepository.findAlarmForPerson(username, id);
+        if(CollectionUtils.isEmpty(alarms)){
+            throw new RuntimeException("Not authorized to delete this alarm!");
+        }
+
+        alarmRepository.deleteById(id);
     }
 
     @Override

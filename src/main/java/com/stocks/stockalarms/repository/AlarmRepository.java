@@ -29,6 +29,9 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
             "OR (SUBSTRING(a.rule, 0, 2)='-' AND ?2 <= a.alarmPrice)) ")
     List<PersonWithAlarm> findPersonsWithAlarmsForStock(String stockSymbol, BigDecimal price);
 
+    @Query(value = "select a from Alarm a join a.monitoredStock ms join ms.person p where p.username=?1 and a.id=?2")
+    List<Alarm> findAlarmForPerson(String username, Long alarmId);
+
     @Query(value = "update Alarm a set a.active=?1, a.triggeredAt=?2 where a.id in (?3)")
     @Modifying
     void setAlarmStatusForIds(boolean status, LocalDateTime triggeredAt, Collection<Long> ids);

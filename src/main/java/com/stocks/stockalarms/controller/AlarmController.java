@@ -11,12 +11,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.stocks.stockalarms.dto.AlarmDto;
@@ -57,6 +60,12 @@ public class AlarmController {
         model.addAttribute("inactiveAlarms", inactiveAlarms);
 
         return "alarms";
+    }
+
+    @DeleteMapping("{id}")
+    @ResponseBody
+    public void deleteAlarm(@PathVariable(name = "id") Long id){
+        alarmService.delete(id, UserUtil.getCurrentUsername());
     }
 
     private Sort processSort(@RequestParam String sortBy) {
