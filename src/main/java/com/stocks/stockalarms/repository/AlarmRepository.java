@@ -24,7 +24,7 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
 
     @Query(value = "SELECT new com.stocks.stockalarms.dto.PersonWithAlarm(ms, p, s, a) " +
             "FROM MonitoredStock ms JOIN ms.stock s JOIN ms.person p JOIN ms.alarms a " +
-            "WHERE s.symbol=(?1)" +
+            "WHERE s.symbol=(?1) AND a.active=true " +
             "AND ((SUBSTRING(a.rule, 0, 2)='+' AND ?2 >= a.alarmPrice) " +
             "OR (SUBSTRING(a.rule, 0, 2)='-' AND ?2 <= a.alarmPrice)) ")
     List<PersonWithAlarm> findPersonsWithAlarmsForStock(String stockSymbol, BigDecimal price);
