@@ -1,6 +1,7 @@
 package com.stocks.stockalarms.service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
@@ -40,9 +41,14 @@ import lombok.AllArgsConstructor;
 public class AlarmServiceImpl implements AlarmService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AlarmServiceImpl.class);
-
+    private static Function<Person, List<Alarm>> getAlarms = (person) -> {
+        return person.getMonitoredStocks()
+                .stream()
+                .map(MonitoredStock::getAlarms)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+    };
     private final EmailService emailService;
-
     private final MonitoredStockRepository monitoredStockRepository;
     private final AlarmRepository alarmRepository;
     private final StockRepository stockRepository;
@@ -77,6 +83,7 @@ public class AlarmServiceImpl implements AlarmService {
         alarm.setRule(alarmForm.getRule());
         alarm.setAlarmPrice(calculateTargetPrice(BigDecimal.valueOf(monitoredStock.getStock().getPrice()), alarmForm.getRule()));
         alarm.setRefferencePrice(monitoredStock.getStock().getPrice());
+        alarm.setActive(true);
 
         alarmRepository.save(alarm);
     }
@@ -98,23 +105,27 @@ public class AlarmServiceImpl implements AlarmService {
         String symbol = stockUpdatedEvent.getStockSymbol();
         BigDecimal stockPrice = stockUpdatedEvent.getPrice();
 
-
         List<PersonWithAlarm> personWithAlarms = alarmRepository.findPersonsWithAlarmsForStock(symbol, stockPrice);
+
+        if (personWithAlarms.size() == 0) {
+            LOGGER.debug("No alarms triggered...");
+            return;
+        }
+
         MultiValueMap<String, PersonWithAlarm> personWithAlarmsMap = personWithAlarms
                 .stream()
                 .peek(p -> p.setCurrentPrice(stockPrice))
                 .collect(MyCollectors.toMultiValueMap(PersonWithAlarm::getUsername, Function.identity()));
 
         emailService.send(personWithAlarmsMap);
-    }
 
-    private static Function<Person, List<Alarm>> getAlarms = (person) -> {
-        return person.getMonitoredStocks()
+        // set alarms as inactive
+        List<Long> alarmIds = personWithAlarms
                 .stream()
-                .map(MonitoredStock::getAlarms)
-                .flatMap(Collection::stream)
+                .map(PersonWithAlarm::getAlarmId)
                 .collect(Collectors.toList());
-    };
+        alarmRepository.setAlarmStatusForIds(false, LocalDateTime.now(), alarmIds);
+    }
 
     private BigDecimal calculateTargetPrice(BigDecimal initialPrice, String rule) {
         boolean add = rule.startsWith("+");

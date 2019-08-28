@@ -3,6 +3,12 @@
 
 <@layout.myLayout>
 
+    <style>
+        .inactive {
+            color: gray;
+        }
+    </style>
+
     <#if alarmSaved??>
         <div class="alert alert-success" role="alert">
             Alarm saved succesfully!
@@ -12,6 +18,7 @@
         </div>
     </#if>
 
+    <h3>Active Alarms: </h3>
     <table class="table table-striped">
         <thead class="thead-dark">
         <tr>
@@ -37,8 +44,8 @@
                 <td>
                     <button type="button" class="btn btn-info" data-toggle="modal"
                             data-target="#editAlarmModal" data-symbol="${alarm.stock.symbol}" data-initial-price="${alarm.referencePrice}"
-                                data-current-price="${alarm.stock.price}" data-rule="${alarm.rule}" data-variance="${alarm.variance}"
-                                data-id="${alarm.id}">
+                            data-current-price="${alarm.stock.price}" data-rule="${alarm.rule}" data-variance="${alarm.variance}"
+                            data-id="${alarm.id}">
                         Edit
                     </button>
                 </td>
@@ -47,6 +54,36 @@
         </tbody>
     </table>
 
+    <#if inactiveAlarms?size != 0>
+        <h4>Inactive Alarms: </h4>
+        <table class="table inactive">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">Symbol</th>
+                <th scope="col">Initial Price</th>
+                <th scope="col">Current Price</th>
+                <th scope="col">Variance</th>
+                <th scope="col">Target variance</th>
+                <th scope="col">Target price</th>
+                <th scope="col">Triggered at</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <#list inactiveAlarms as alarm>
+                <tr>
+                    <th scope="row">${alarm.stock.symbol!'N/A'}</th>
+                    <td>$${alarm.referencePrice!'N/A'}</td>
+                    <td>$${alarm.stock.price!'N/A'}</td>
+                    <td>${alarm.variance!'N/A'}</td>
+                    <td>${alarm.rule!'N/A'}</td>
+                    <td>$${alarm.alarmPrice!'N/A'}</td>
+                    <td>${alarm.triggeredAt!'N/A'}</td>
+                </tr>
+            </#list>
+            </tbody>
+        </table>
+    </#if>
     <!-- Modal -->
     <div class="modal fade" id="editAlarmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">

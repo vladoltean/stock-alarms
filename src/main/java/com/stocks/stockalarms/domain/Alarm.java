@@ -1,6 +1,7 @@
 package com.stocks.stockalarms.domain;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -36,6 +37,8 @@ public class Alarm {
     private String rule;
 
     private BigDecimal alarmPrice;
+
+    private LocalDateTime triggeredAt;
 
     private boolean active;
 }

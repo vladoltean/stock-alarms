@@ -1,5 +1,6 @@
 package com.stocks.stockalarms.util;
 
+import java.time.format.DateTimeFormatter;
 import java.util.function.Function;
 
 import org.springframework.beans.BeanUtils;
@@ -14,15 +15,11 @@ import com.stocks.stockalarms.dto.StockDto;
  */
 public final class Mapper {
 
-    private Mapper() {
-    }
-
     public static final Function<Stock, StockDto> toStockDto = (Stock stock) -> {
         StockDto stockDto = new StockDto();
         BeanUtils.copyProperties(stock, stockDto);
         return stockDto;
     };
-
     public static final Function<Alarm, AlarmDto> toAlarmDto = (Alarm alarm) -> {
         AlarmDto alarmDto = new AlarmDto();
         alarmDto.setId(alarm.getId());
@@ -32,9 +29,15 @@ public final class Mapper {
         alarmDto.setRule(alarm.getRule());
         alarmDto.setStock(toStockDto.apply(alarm.getMonitoredStock().getStock()));
         alarmDto.setVariance(getVarianceAsPercentage(alarm.getRefferencePrice(), alarmDto.getStock().getPrice()));
+        if (alarm.getTriggeredAt() != null) {
+            alarmDto.setTriggeredAt(DateTimeFormatter.ISO_DATE_TIME.format(alarm.getTriggeredAt()));
+        }
 
         return alarmDto;
     };
+
+    private Mapper() {
+    }
 
     /**
      * Calculates the percentage of the initial value that is needed to get (by summing) to the currentValue.

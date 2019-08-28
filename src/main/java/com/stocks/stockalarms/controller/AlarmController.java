@@ -2,6 +2,8 @@ package com.stocks.stockalarms.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.stocks.stockalarms.dto.AlarmDto;
 import com.stocks.stockalarms.dto.AlarmForm;
 import com.stocks.stockalarms.service.AlarmService;
 import com.stocks.stockalarms.util.UserUtil;
@@ -38,7 +41,21 @@ public class AlarmController {
         if (StringUtils.isEmpty(sortBy)) {
             sortBy = "monitoredStock.stock.symbol";
         }
-        model.addAttribute("alarms", alarmService.findAllForUser(UserUtil.getCurrentUsername(), processSort(sortBy)));
+
+        List<AlarmDto> alarms = alarmService.findAllForUser(UserUtil.getCurrentUsername(), processSort(sortBy));
+        List<AlarmDto> activeAlarms = alarms
+                .stream()
+                .filter(AlarmDto::isActive)
+                .collect(Collectors.toList());
+
+        List<AlarmDto> inactiveAlarms = alarms
+                .stream()
+                .filter(a -> !a.isActive())
+                .collect(Collectors.toList());
+
+        model.addAttribute("alarms", activeAlarms);
+        model.addAttribute("inactiveAlarms", inactiveAlarms);
+
         return "alarms";
     }
 

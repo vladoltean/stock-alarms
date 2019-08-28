@@ -1,10 +1,13 @@
 package com.stocks.stockalarms.repository;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -17,12 +20,7 @@ import com.stocks.stockalarms.dto.PersonWithAlarm;
 @Repository
 public interface AlarmRepository extends JpaRepository<Alarm, Long> {
 
-    List<Alarm> findAllByMonitoredStockPersonUsername(String username);
-
     List<Alarm> findAllByMonitoredStockPersonUsername(String username, Sort sort);
-
-    List<Alarm> findAllByMonitoredStockStockSymbol(String stockSymbol);
-
 
     @Query(value = "SELECT new com.stocks.stockalarms.dto.PersonWithAlarm(ms, p, s, a) " +
             "FROM MonitoredStock ms JOIN ms.stock s JOIN ms.person p JOIN ms.alarms a " +
@@ -31,5 +29,8 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
             "OR (SUBSTRING(a.rule, 0, 2)='-' AND ?2 <= a.alarmPrice)) ")
     List<PersonWithAlarm> findPersonsWithAlarmsForStock(String stockSymbol, BigDecimal price);
 
+    @Query(value = "update Alarm a set a.active=?1, a.triggeredAt=?2 where a.id in (?3)")
+    @Modifying
+    void setAlarmStatusForIds(boolean status, LocalDateTime triggeredAt, Collection<Long> ids);
 
 }
