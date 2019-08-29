@@ -39,8 +39,8 @@
                 <th scope="row">${alarm.stock.symbol!'N/A'}</th>
                 <td>$${alarm.referencePrice!'N/A'}</td>
                 <td>$${alarm.stock.price!'N/A'}</td>
-                <td>${alarm.variance!'N/A'}</td>
-                <td>${alarm.rule!'N/A'}</td>
+                <td>${alarm.variance!'N/A'}%</td>
+                <td>${alarm.rule!'N/A'}%</td>
                 <td>$${alarm.alarmPrice!'N/A'}</td>
                 <td>
                     <button type="button" class="btn btn-info" data-toggle="modal"
@@ -84,8 +84,8 @@
                     <th scope="row">${alarm.stock.symbol!'N/A'}</th>
                     <td>$${alarm.referencePrice!'N/A'}</td>
                     <td>$${alarm.stock.price!'N/A'}</td>
-                    <td>${alarm.variance!'N/A'}</td>
-                    <td>${alarm.rule!'N/A'}</td>
+                    <td>${alarm.variance!'N/A'}%</td>
+                    <td>${alarm.rule!'N/A'}%</td>
                     <td>$${alarm.alarmPrice!'N/A'}</td>
                     <td>${alarm.triggeredAt!'N/A'}</td>
                 </tr>
@@ -125,7 +125,7 @@
                         <h4>Target Variance</h4>
                         <input id="identifier" type="number" name="id" value="5" hidden>
                         <input id="stockSymbol" type="text" name="stockSymbol" value="GSG" hidden>
-                        <input id="rule" class="form-control" type="text" placeholder="Rule" name="rule" value="+20">
+                        <input id="rule" class="form-control" type="text" placeholder="Rule" name="rule" value="+20" pattern="^\+|\-\d{1,5}|\d{0,5}\.\d{1,2}$">
                     </form>
                 </div>
                 <div class="modal-footer">

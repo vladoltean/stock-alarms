@@ -54,7 +54,7 @@
                     <th scope="row">${stock.symbol!'N/A'}</th>
                     <td>${stock.companyName!'N/A'}</td>
                     <td>$${stock.price!'N/A'}</td>
-                    <td>${stock.changePercent!'N/A'}</td>
+                    <td>${stock.changePercent!'N/A'}%</td>
                     <td>
                         <#assign changePercentNumber = stock.changePercent?remove_ending("%")?number>
                         <#if changePercentNumber gt 0>
@@ -92,8 +92,8 @@
                 <div class="modal-body">
                     <form id="add-alarm-form" method="POST" action="alarms">
                         <#--                        TODO: Add tooltip and validation to rule-->
-                        <input id="stockSymbol" class="form-control" type="text" placeholder="Stock Symbol" name="stockSymbol">
-                        <input class="form-control" type="text" placeholder="Rule" name="rule">
+                        <input id="stockSymbol" class="form-control" type="text" placeholder="Stock Symbol" name="stockSymbol" required>
+                        <input class="form-control" type="text" placeholder="Rule" name="rule" pattern="\+|-\d{1,5}|\d{0,5}\.\d{1,2}">
                     </form>
                 </div>
                 <div class="modal-footer">

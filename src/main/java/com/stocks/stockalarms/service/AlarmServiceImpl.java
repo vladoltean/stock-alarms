@@ -152,7 +152,7 @@ public class AlarmServiceImpl implements AlarmService {
         if (add) {
             return initialPrice.add(percentValueOfInitialPrice);
         } else {
-            return initialPrice.add(percentValueOfInitialPrice);
+            return initialPrice.subtract(percentValueOfInitialPrice);
         }
 
     }
