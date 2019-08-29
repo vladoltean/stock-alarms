@@ -1,17 +1,10 @@
 <#import "/spring.ftl" as spring />
-
 <#import "layout.ftl" as layout>
+<#import "util-macros.ftl" as util>
 
 <@layout.myLayout>
 
-    <#if alarmSaved??>
-        <div class="alert alert-success" role="alert">
-            Alarm saved succesfully!
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </#if>
+    <@util.alarmSaving></@util.alarmSaving>
 
     <#if stockSaved??>
         <div class="alert alert-success" role="alert">
@@ -58,11 +51,11 @@
                     <td>
                         <#assign changePercentNumber = stock.changePercent?remove_ending("%")?number>
                         <#if changePercentNumber gt 0>
-                            <span class="glyphicon glyphicon-arrow-up" aria-hidden="true" style="color: green"></span>
+                            <p style="color: green; font-size: 1.3em; font-weight: bold">&#8593;</p>
                         <#elseif changePercentNumber == 0>
                             ---
                         <#else>
-                            <span class="glyphicon glyphicon-arrow-down" aria-hidden="true" style="color:red"></span>
+                            <p style="color: red; font-size: 1.3em; font-weight: bold">&#8595;</p>
                         </#if>
 
                     </td>
@@ -93,7 +86,7 @@
                     <form id="add-alarm-form" method="POST" action="alarms">
                         <#--                        TODO: Add tooltip and validation to rule-->
                         <input id="stockSymbol" class="form-control" type="text" placeholder="Stock Symbol" name="stockSymbol" required>
-                        <input class="form-control" type="text" placeholder="Rule" name="rule" pattern="\+|-\d{1,5}|\d{0,5}\.\d{1,2}">
+                        <input class="form-control" type="text" placeholder="Rule" name="rule">
                     </form>
                 </div>
                 <div class="modal-footer">

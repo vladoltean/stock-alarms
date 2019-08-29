@@ -1,5 +1,6 @@
 <#import "/spring.ftl" as spring />
 <#import "layout.ftl" as layout>
+<#import "util-macros.ftl" as util>
 
 <@layout.myLayout>
 
@@ -9,14 +10,7 @@
         }
     </style>
 
-    <#if alarmSaved??>
-        <div class="alert alert-success" role="alert">
-            Alarm saved succesfully!
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </#if>
+    <@util.alarmSaving></@util.alarmSaving>
 
     <h3>Active Alarms: </h3>
     <table class="table table-striped">
@@ -125,7 +119,7 @@
                         <h4>Target Variance</h4>
                         <input id="identifier" type="number" name="id" value="5" hidden>
                         <input id="stockSymbol" type="text" name="stockSymbol" value="GSG" hidden>
-                        <input id="rule" class="form-control" type="text" placeholder="Rule" name="rule" value="+20" pattern="^\+|\-\d{1,5}|\d{0,5}\.\d{1,2}$">
+                        <input id="rule" class="form-control" type="text" placeholder="Rule" name="rule">
                     </form>
                 </div>
                 <div class="modal-footer">
