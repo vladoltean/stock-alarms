@@ -11,6 +11,7 @@ import com.stocks.stockalarms.domain.MonitoredStock;
 import com.stocks.stockalarms.domain.Stock;
 import com.stocks.stockalarms.domain.event.StockUpdatedEvent;
 import com.stocks.stockalarms.dto.MonitorStockForm;
+import com.stocks.stockalarms.exception.NotFoundException;
 import com.stocks.stockalarms.external.AlphavantageGateway;
 import com.stocks.stockalarms.external.GlobalQuoteResponse;
 import com.stocks.stockalarms.repository.MonitoredStockRepository;
@@ -36,7 +37,7 @@ public class StockServiceImpl implements StockService {
     @Transactional
     public void save(String symbol, String companyName, String price, String changePercent) {
         Stock stock = stockRepository.findBySymbol(symbol);
-        if(stock == null) {
+        if (stock == null) {
             stock = new Stock();
             stock.setCompanyName(companyName);
         }
@@ -56,6 +57,17 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
+    @Transactional
+    public Stock findOneBySymbol(String symbol) {
+        Stock stock = stockRepository.findBySymbol(symbol);
+        if (stock == null) {
+            throw new NotFoundException(String.format("Stock not found for symbol %s.", symbol));
+        }
+        return null;
+    }
+
+    @Override
+    @Transactional
     public void addToMonitor(MonitorStockForm monitorStockForm, String username) {
         Stock stock = stockRepository.findBySymbol(monitorStockForm.getSymbol());
         if (stock == null) {

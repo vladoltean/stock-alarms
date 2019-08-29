@@ -11,28 +11,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
 
 import com.stocks.stockalarms.domain.Alarm;
 import com.stocks.stockalarms.domain.MonitoredStock;
 import com.stocks.stockalarms.domain.Person;
-import com.stocks.stockalarms.domain.Stock;
 import com.stocks.stockalarms.domain.event.StockUpdatedEvent;
 import com.stocks.stockalarms.dto.AlarmDto;
 import com.stocks.stockalarms.dto.AlarmForm;
 import com.stocks.stockalarms.dto.PersonWithAlarm;
 import com.stocks.stockalarms.repository.AlarmRepository;
-import com.stocks.stockalarms.repository.MonitoredStockRepository;
-import com.stocks.stockalarms.repository.PersonRepository;
-import com.stocks.stockalarms.repository.StockRepository;
 import com.stocks.stockalarms.util.Mapper;
 import com.stocks.stockalarms.util.MyCollectors;
-import com.stocks.stockalarms.util.UserUtil;
 
 import lombok.AllArgsConstructor;
 
@@ -51,29 +44,15 @@ public class AlarmServiceImpl implements AlarmService {
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     };
+    private final MonitoredStockService monitoredStockService;
     private final EmailService emailService;
-    private final MonitoredStockRepository monitoredStockRepository;
     private final AlarmRepository alarmRepository;
-    private final StockRepository stockRepository;
-    private final PersonRepository personRepository;
 
     @Override
     @Transactional
-    public void save(AlarmForm alarmForm) {
+    public void save(AlarmForm alarmForm, String username) {
+        MonitoredStock monitoredStock = monitoredStockService.getMonitoredStock(alarmForm.getStockSymbol(), username);
 
-        String username = UserUtil.getCurrentUsername();
-
-        MonitoredStock monitoredStock = monitoredStockRepository.findByPersonUsernameAndStockSymbol(username, alarmForm.getStockSymbol());
-        if (monitoredStock == null) {
-            Person person = personRepository.findByUsername(username);
-            Stock stock = stockRepository.findBySymbol(alarmForm.getStockSymbol());
-
-            monitoredStock = new MonitoredStock();
-            monitoredStock.setPerson(person);
-            monitoredStock.setStock(stock);
-            monitoredStock = monitoredStockRepository.save(monitoredStock);
-        }
-// TODO: break method
         Alarm alarm = null;
         if (alarmForm.getId() != null) {
             alarm = alarmRepository.getOne(alarmForm.getId());
@@ -94,9 +73,9 @@ public class AlarmServiceImpl implements AlarmService {
     @Override
     @Transactional
     public void delete(Long id, String username) {
-        // validate user has right to delete it?
+        // validate user has right to delete it
         List<Alarm> alarms = alarmRepository.findAlarmForPerson(username, id);
-        if(CollectionUtils.isEmpty(alarms)){
+        if (CollectionUtils.isEmpty(alarms)) {
             throw new RuntimeException("Not authorized to delete this alarm!");
         }
 

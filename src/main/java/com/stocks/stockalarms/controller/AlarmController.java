@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +26,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.stocks.stockalarms.dto.AlarmDto;
 import com.stocks.stockalarms.dto.AlarmForm;
+import com.stocks.stockalarms.exception.NotFoundException;
 import com.stocks.stockalarms.service.AlarmService;
+import com.stocks.stockalarms.service.SecurityServiceImpl;
 import com.stocks.stockalarms.util.UserUtil;
 
 import lombok.AllArgsConstructor;
@@ -36,6 +40,8 @@ import lombok.AllArgsConstructor;
 @RequestMapping("alarms")
 @AllArgsConstructor
 public class AlarmController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SecurityServiceImpl.class);
 
     private AlarmService alarmService;
 
@@ -64,7 +70,7 @@ public class AlarmController {
 
     @DeleteMapping("{id}")
     @ResponseBody
-    public void deleteAlarm(@PathVariable(name = "id") Long id){
+    public void deleteAlarm(@PathVariable(name = "id") Long id) {
         alarmService.delete(id, UserUtil.getCurrentUsername());
     }
 
@@ -85,9 +91,14 @@ public class AlarmController {
 
     @PostMapping
     public String saveAlarm(@ModelAttribute @Valid AlarmForm alarmForm, @RequestHeader("Referer") String referer, RedirectAttributes redirectAttributes) throws URISyntaxException {
-        alarmService.save(alarmForm);
-
-        redirectAttributes.addFlashAttribute("alarmSaved", true);
+        try {
+            alarmService.save(alarmForm, UserUtil.getCurrentUsername());
+            redirectAttributes.addFlashAttribute("alarmSaved", true);
+        } catch (NotFoundException e) {
+            LOGGER.error("Not found exception raised.", e);
+            redirectAttributes.addFlashAttribute("alarmError", true);
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
 
         URI refererUri = new URI(referer);
         return String.format("redirect:/%s", refererUri.getPath().substring(1));

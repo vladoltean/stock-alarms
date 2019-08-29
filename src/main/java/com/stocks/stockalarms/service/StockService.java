@@ -16,6 +16,8 @@ public interface StockService {
 
     List<Stock> findAll();
 
+    Stock findOneBySymbol(String symbol);
+
     void addToMonitor(MonitorStockForm monitorStockForm, String username);
 
     List<Stock> findAllMonitoredStocksForUser(String username);
