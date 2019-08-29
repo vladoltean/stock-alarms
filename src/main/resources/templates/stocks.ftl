@@ -84,9 +84,9 @@
                 </div>
                 <div class="modal-body">
                     <form id="add-alarm-form" method="POST" action="alarms">
-                        <#--                        TODO: Add tooltip and validation to rule-->
                         <input id="stockSymbol" class="form-control" type="text" placeholder="Stock Symbol" name="stockSymbol" required>
-                        <input class="form-control" type="text" placeholder="Rule" name="rule">
+                        <span>Note: Valid formats are: +2.24, -3.7, +2. No validation in place.</span>
+                        <input class="form-control" type="text" placeholder="Targeted variance" name="rule">
                     </form>
                 </div>
                 <div class="modal-footer">
