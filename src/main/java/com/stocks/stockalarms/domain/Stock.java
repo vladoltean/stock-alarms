@@ -15,7 +15,6 @@ import lombok.Data;
 @Entity
 @Data
 public class Stock {
-// TODO: keep it or search for stocks? consider using symbol as PK
 
     @Id
     @Column(unique = true)
